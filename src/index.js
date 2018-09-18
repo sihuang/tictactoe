@@ -86,6 +86,7 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const over = isGameOver(current.squares);
 
     const moves = history.map((step, move) => {
       const desc = move
@@ -106,6 +107,8 @@ class Game extends React.Component {
     let status;
     if (winner) {
       status = "Winner: " + winner;
+    } else if (over) {
+      status = "Tied!!!";
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
@@ -146,4 +149,16 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function isGameOver(squares) {
+  // Check if every square has a value
+  for (let i = 0; i < 9; i++) {
+    if (squares[i] === null) {
+      return false;
+    }
+  }
+
+  // Game over
+  return true;
 }
