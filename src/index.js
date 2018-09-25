@@ -2,6 +2,34 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
+import Form from "react-jsonschema-form";
+
+const schema = {
+  title: "Todo",
+  type: "object",
+  required: ["title"],
+  properties: {
+    title: { type: "string", title: "Title", default: "A new task" },
+    done: { type: "boolean", title: "Done?", default: false }
+  }
+};
+
+const uiSchema = {
+  title: {
+    "ui:help": "Hint: Make it strong!"
+  }
+};
+const log = type => console.log.bind(console, type);
+
+const CustomTitleField = ({ title, required }) => {
+  const legend = required ? title + "*" : title;
+  return <div id="custom">{legend}</div>;
+};
+
+const fields = {
+  TitleField: CustomTitleField
+};
+
 function Square(props) {
   return (
     <button className="square" onClick={props.onClick}>
@@ -129,7 +157,19 @@ class Game extends React.Component {
 
 // ========================================
 
-ReactDOM.render(<Game />, document.getElementById("root"));
+ReactDOM.render(
+  <Form
+    uiSchema={uiSchema}
+    schema={schema}
+    onChange={log("changed")}
+    onSubmit={log("submitted")}
+    onError={log("errors")}>
+    <Game />
+    </Form>,
+  document.getElementById("root")
+);
+
+// ReactDOM.render(<Game />, document.getElementById("root"));
 
 function calculateWinner(squares) {
   const lines = [
